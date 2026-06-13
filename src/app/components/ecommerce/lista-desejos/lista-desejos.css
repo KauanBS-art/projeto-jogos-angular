@@ -1,0 +1,13 @@
+:host { display: block; }
+.page-heading { display: grid; gap: 8px; margin-bottom: 22px; color: var(--text); }
+.page-heading span { display: inline-flex; align-items: center; gap: 8px; color: #63e6be; font-weight: 800; }
+.page-heading h1 { margin: 0; font-size: 38px; }
+.wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+.wish-card { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); }
+.cover { display: grid; height: 145px; place-items: center; overflow: hidden; border: 0; border-radius: 8px; background: #020817; color: #72a7ff; cursor: pointer; }
+.cover img { width: 100%; height: 100%; object-fit: cover; }
+.cover mat-icon { width: 54px; height: 54px; font-size: 54px; }
+.wish-card div { display: grid; gap: 6px; }
+.wish-card span { color: #63e6be; font-weight: 800; }
+.actions { display: flex !important; grid-template-columns: none; align-items: center; justify-content: space-between; }
+.state-box { display: grid; gap: 12px; justify-items: center; padding: 36px; border-radius: 8px; background: var(--surface); color: var(--muted); }

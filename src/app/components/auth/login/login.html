@@ -1,0 +1,44 @@
+<section class="login-page">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-kicker">
+        <mat-icon>sports_esports</mat-icon>
+        Acesso da loja
+      </div>
+
+      <h1>GameXtore</h1>
+      <p>Entre para acessar sua conta, finalizar compras e acompanhar seus pedidos.</p>
+    </div>
+
+    <div class="login-panel">
+      <span class="login-kicker muted">
+        <mat-icon>login</mat-icon>
+        Entrar
+      </span>
+      <h2>Bem-vindo de volta</h2>
+      <p>Use seu email e senha para continuar com seguranca.</p>
+
+      <form class="login-form" [formGroup]="form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" formControlName="senha" />
+        </mat-form-field>
+
+        <button matButton="filled" type="button" (click)="entrar()" [disabled]="carregando || form.invalid">
+          <mat-icon>arrow_forward</mat-icon>
+          {{ carregando ? 'Entrando...' : 'Entrar' }}
+        </button>
+      </form>
+
+      <div class="login-links">
+        <a routerLink="/cadastro">Criar conta</a>
+        <a routerLink="/esqueci-senha">Esqueci minha senha</a>
+      </div>
+    </div>
+  </div>
+</section>

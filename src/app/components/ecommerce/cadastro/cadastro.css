@@ -1,0 +1,18 @@
+:host { display: block; }
+.auth-card {
+  display: grid;
+  gap: 14px;
+  width: min(620px, 100%);
+  margin: 0 auto;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; color: #63e6be; font-weight: 800; }
+h1 { margin: 0; font-size: 36px; }
+p, a { color: var(--muted); }
+form { display: grid; gap: 12px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 680px) { .form-row { grid-template-columns: 1fr; } }

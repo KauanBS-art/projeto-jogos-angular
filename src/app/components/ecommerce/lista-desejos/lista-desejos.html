@@ -1,0 +1,41 @@
+<section class="page-heading">
+  <span><mat-icon>favorite</mat-icon> Lista de desejos</span>
+  <h1>Jogos salvos para depois</h1>
+</section>
+
+@if (loading) {
+  <div class="state-box">Carregando lista...</div>
+} @else if (!itens().length) {
+  <div class="state-box">
+    <mat-icon>favorite_border</mat-icon>
+    <p>Nenhum jogo salvo ainda.</p>
+    <a matButton="filled" routerLink="/">Explorar catalogo</a>
+  </div>
+} @else {
+  <section class="wishlist-grid">
+    @for (jogo of itens(); track jogo.id) {
+      <article class="wish-card">
+        <button class="cover" type="button" [routerLink]="['/jogos', jogo.id]">
+          @if (getImagemUrl(jogo); as imagemUrl) {
+            <img [src]="imagemUrl" [alt]="jogo.titulo" />
+          } @else {
+            <mat-icon>stadia_controller</mat-icon>
+          }
+        </button>
+        <div>
+          <strong>{{ jogo.titulo }}</strong>
+          <span>{{ jogo.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+        </div>
+        <div class="actions">
+          <button matButton="filled" type="button" (click)="comprar(jogo)">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Comprar
+          </button>
+          <button mat-icon-button type="button" (click)="remover(jogo.id)" aria-label="Remover dos desejos">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </article>
+    }
+  </section>
+}

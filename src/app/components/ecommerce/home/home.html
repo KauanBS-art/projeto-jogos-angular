@@ -1,0 +1,230 @@
+<section class="store-hero">
+  <div class="hero-copy">
+    <span class="eyebrow">
+      <mat-icon>bolt</mat-icon>
+      Marketplace de jogos digitais
+    </span>
+    <h1>GameXtore</h1>
+    <p>Jogos digitais, promocoes, lista de desejos e checkout em uma experiencia simples para comprar e jogar.</p>
+  </div>
+
+  <div class="hero-carousel" aria-label="Destaques da loja">
+    @for (slide of heroSlides; track slide.image; let index = $index) {
+      <img [src]="slide.image" [alt]="slide.alt" [class.active]="index === heroIndex" />
+    }
+
+    <div class="carousel-shade"></div>
+    <div class="carousel-caption">
+      <span>{{ activeHeroSlide.kicker }}</span>
+      <strong>{{ activeHeroSlide.title }}</strong>
+    </div>
+
+    <button class="carousel-btn previous" type="button" (click)="previousHeroSlide()" aria-label="Imagem anterior">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button class="carousel-btn next" type="button" (click)="nextHeroSlide()" aria-label="Proxima imagem">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <div class="carousel-dots" aria-label="Selecionar destaque">
+      @for (slide of heroSlides; track slide.image; let index = $index) {
+        <button
+          type="button"
+          [class.active]="index === heroIndex"
+          (click)="setHeroSlide(index)"
+          [attr.aria-label]="'Mostrar destaque ' + (index + 1)">
+        </button>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="trust-strip" aria-label="Diferenciais da loja">
+  <div><mat-icon>verified</mat-icon><strong>Loja oficial</strong><span>Catalogo curado</span></div>
+  <div><mat-icon>shield</mat-icon><strong>Compra segura</strong><span>Login e historico</span></div>
+  <div><mat-icon>local_offer</mat-icon><strong>Cupons</strong><span>Use GAME10</span></div>
+</section>
+
+<section class="toolbar">
+  <label class="search-box">
+    <mat-icon>search</mat-icon>
+    <input
+      type="search"
+      placeholder="Buscar por titulo"
+      [(ngModel)]="termoBusca"
+      (keyup.enter)="carregarJogos()" />
+  </label>
+
+  <button matButton="filled" type="button" (click)="carregarJogos()">
+    <mat-icon>search</mat-icon>
+    Buscar
+  </button>
+</section>
+
+<div class="main-layout">
+  <aside class="sidebar-left">
+    <section class="filters" aria-label="Filtros do catalogo">
+      <label>
+        Categoria
+        <select [(ngModel)]="categoriaSelecionada" (change)="aplicarFiltros()">
+          <option value="">Todas</option>
+          @for (categoria of categorias; track categoria) {
+            <option [value]="categoria">{{ categoria }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Plataforma
+        <select [(ngModel)]="plataformaSelecionada" (change)="aplicarFiltros()">
+          <option value="">Todas</option>
+          @for (plataforma of plataformas; track plataforma) {
+            <option [value]="plataforma">{{ plataforma }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Preco Min
+        <input type="number" min="0" step="0.01" [(ngModel)]="precoMin" (input)="aplicarFiltros()" placeholder="R$ 0,00" />
+      </label>
+
+      <label>
+        Preco Max
+        <input type="number" min="0" step="0.01" [(ngModel)]="precoMax" (input)="aplicarFiltros()" placeholder="Ilimitado" />
+      </label>
+    </section>
+
+    <section class="coupons-sidebar" aria-label="Cupons de desconto">
+      <h3 style="margin-bottom: 12px; font-size: 16px;">Cupons Ativos</h3>
+      @for (cupom of cupons; track cupom.codigo) {
+        <div class="coupon-card">
+          <strong>{{ cupom.codigo }}</strong>
+          <span class="discount">{{ cupom.percentualDesconto }}% OFF</span>
+          <p>{{ cupom.descricao }}</p>
+        </div>
+      } @empty {
+        <p>Nenhum cupom ativo no momento.</p>
+      }
+    </section>
+  </aside>
+
+  <div class="content-right">
+    @if (loading) {
+      <div class="state-box">Carregando catalogo...</div>
+    } @else if (!jogos.length) {
+      <div class="state-box">Nenhum jogo encontrado.</div>
+    } @else {
+      <section class="game-grid" aria-label="Catalogo de jogos">
+        @for (jogo of jogos; track jogo.id) {
+          <article class="game-card">
+            <button class="wish-btn" type="button" (click)="alternarDesejo(jogo)" [attr.aria-label]="'Adicionar ' + jogo.titulo + ' a lista de desejos'">
+              <mat-icon>{{ estaNosDesejos(jogo) ? 'favorite' : 'favorite_border' }}</mat-icon>
+            </button>
+
+            @if (jogo.percentualDesconto && jogo.percentualDesconto > 0) {
+                <div class="discount-badge">-{{ jogo.percentualDesconto }}%</div>
+            }
+
+            <button class="cover" type="button" (click)="verDetalhe(jogo)" [attr.aria-label]="'Ver detalhes de ' + jogo.titulo">
+              @if (getImagemUrl(jogo); as imagemUrl) {
+                <img [src]="imagemUrl" [alt]="jogo.titulo" />
+              } @else {
+                <mat-icon>stadia_controller</mat-icon>
+              }
+            </button>
+
+            <div class="game-info">
+              <span class="publisher">{{ jogo.nomeEmpresa || 'Desenvolvedora nao informada' }}</span>
+              <h2>{{ jogo.titulo }}</h2>
+              <p>{{ jogo.descricao }}</p>
+
+              <div class="chips">
+                @for (categoria of jogo.categorias ?? []; track categoria) {
+                  <span>{{ categoria }}</span>
+                }
+                @for (plataforma of jogo.plataformas ?? []; track plataforma) {
+                  <span>{{ plataforma }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="game-actions">
+              <div class="price-container">
+                @if (jogo.percentualDesconto && jogo.percentualDesconto > 0) {
+                  <del>{{ jogo.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</del>
+                  <strong style="color: #63e6be;">{{ jogo.precoComDesconto | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+                } @else {
+                  <strong>{{ jogo.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+                }
+              </div>
+              <div class="actions-group" style="display: flex; gap: 8px; flex-wrap: wrap; width: 100%;">
+                <button matButton="filled" type="button" style="flex: 1; min-width: 120px;" (click)="comprarAgora(jogo)" [disabled]="jogo.estoque <= 0">
+                  {{ jogo.estoque > 0 ? 'Comprar' : 'Sem estoque' }}
+                </button>
+                <button mat-stroked-button type="button" style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.05);" (click)="adicionarSomente(jogo)" [disabled]="jogo.estoque <= 0">
+                  <mat-icon style="margin-right: 4px;">add_shopping_cart</mat-icon>
+                  Ao Carrinho
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+      </section>
+
+      @if (jogosEmPromocao.length > 0) {
+        <h2 style="margin-top: 48px; font-size: 24px;">Promoções em Destaque</h2>
+        <section class="game-grid" aria-label="Jogos em Promocao" style="margin-bottom: 48px;">
+          @for (jogo of jogosEmPromocao; track jogo.id) {
+            <article class="game-card">
+              <button class="wish-btn" type="button" (click)="alternarDesejo(jogo)" [attr.aria-label]="'Adicionar ' + jogo.titulo + ' a lista de desejos'">
+                <mat-icon>{{ estaNosDesejos(jogo) ? 'favorite' : 'favorite_border' }}</mat-icon>
+              </button>
+
+              <div class="discount-badge">-{{ jogo.percentualDesconto }}%</div>
+
+              <button class="cover" type="button" (click)="verDetalhe(jogo)" [attr.aria-label]="'Ver detalhes de ' + jogo.titulo">
+                @if (getImagemUrl(jogo); as imagemUrl) {
+                  <img [src]="imagemUrl" [alt]="jogo.titulo" />
+                } @else {
+                  <mat-icon>stadia_controller</mat-icon>
+                }
+              </button>
+
+              <div class="game-info">
+                <span class="publisher">{{ jogo.nomeEmpresa || 'Desenvolvedora nao informada' }}</span>
+                <h2>{{ jogo.titulo }}</h2>
+                <p>{{ jogo.descricao }}</p>
+
+                <div class="chips">
+                  @for (categoria of jogo.categorias ?? []; track categoria) {
+                    <span>{{ categoria }}</span>
+                  }
+                  @for (plataforma of jogo.plataformas ?? []; track plataforma) {
+                    <span>{{ plataforma }}</span>
+                  }
+                </div>
+              </div>
+
+              <div class="game-actions">
+                <div class="price-container">
+                  <del>{{ jogo.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</del>
+                  <strong style="color: #63e6be;">{{ jogo.precoComDesconto | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+                </div>
+                <div class="actions-group" style="display: flex; gap: 8px; flex-wrap: wrap; width: 100%;">
+                  <button matButton="filled" type="button" style="flex: 1; min-width: 120px;" (click)="comprarAgora(jogo)" [disabled]="jogo.estoque <= 0">
+                    {{ jogo.estoque > 0 ? 'Comprar' : 'Sem estoque' }}
+                  </button>
+                  <button mat-stroked-button type="button" style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.05);" (click)="adicionarSomente(jogo)" [disabled]="jogo.estoque <= 0">
+                    <mat-icon style="margin-right: 4px;">add_shopping_cart</mat-icon>
+                    Ao Carrinho
+                  </button>
+                </div>
+              </div>
+            </article>
+          }
+        </section>
+      }
+    }
+  </div>
+</div>

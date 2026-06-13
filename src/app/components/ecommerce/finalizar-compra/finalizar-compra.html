@@ -1,0 +1,86 @@
+<section class="checkout-heading">
+  <span><mat-icon>payments</mat-icon> Finalizar compra</span>
+  <h1>Endereco, cupom e pagamento</h1>
+</section>
+
+<section class="checkout-layout">
+  <form class="panel" [formGroup]="form">
+    <h2>Selecionar endereco</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Endereco salvo</mat-label>
+      <mat-select formControlName="idEndereco" (selectionChange)="aplicarEnderecoSelecionado()">
+        <mat-option value="novo">Usar novo endereco</mat-option>
+        @for (endereco of enderecos; track endereco.id) {
+          <mat-option [value]="endereco.id?.toString()">{{ endereco.logradouro }}, {{ endereco.numero }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline"><mat-label>CEP</mat-label><input matInput formControlName="cep" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Logradouro</mat-label><input matInput formControlName="logradouro" /></mat-form-field>
+    </div>
+    <div class="form-row compact">
+      <mat-form-field appearance="outline"><mat-label>Numero</mat-label><input matInput formControlName="numero" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Bairro</mat-label><input matInput formControlName="bairro" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Cidade</mat-label><input matInput formControlName="cidade" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>UF</mat-label><input matInput formControlName="estado" /></mat-form-field>
+    </div>
+    <mat-form-field appearance="outline"><mat-label>Complemento</mat-label><input matInput formControlName="complemento" /></mat-form-field>
+
+    <h2>Forma de pagamento</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Pagamento</mat-label>
+      <mat-select formControlName="idModoPagamento">
+        <mat-option [value]="1">PIX</mat-option>
+        <mat-option [value]="2">Boleto</mat-option>
+        <mat-option [value]="3">Cartão de Crédito</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    @if (form.controls.idModoPagamento.value === 3) {
+      <mat-form-field appearance="outline">
+        <mat-label>Selecione seu cartão</mat-label>
+        <mat-select formControlName="idCartaoCredito">
+          @for (cartao of cartoes; track cartao.id) {
+            <mat-option [value]="cartao.id">{{ cartao.numeroMascarado }} - {{ cartao.nomeTitular }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint>
+          @if (cartoes.length === 0) {
+            <span style="color: red;">Nenhum cartão cadastrado. Cadastre no seu perfil.</span>
+          }
+        </mat-hint>
+      </mat-form-field>
+    }
+
+    <h2>Cupom de desconto</h2>
+    <div class="coupon-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Cupom</mat-label>
+        <input matInput formControlName="codigoCupom" placeholder="GAME10" />
+      </mat-form-field>
+      <button matButton="outlined" type="button" (click)="validarCupom()">Aplicar</button>
+    </div>
+  </form>
+
+  <aside class="panel summary">
+    <h2>Resumo</h2>
+    @for (item of itens(); track item.jogo.id) {
+      <div class="summary-item">
+        <span>{{ item.quantidade }}x {{ item.jogo.titulo }}</span>
+        <strong>{{ item.jogo.preco * item.quantidade | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+      </div>
+    }
+    <div class="totals">
+      <span>Subtotal</span><strong>{{ valorTotal() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+      <span>Desconto</span><strong>- {{ valorDesconto() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+      <span>Total</span><strong>{{ valorFinal() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+    </div>
+    <button matButton="filled" type="button" (click)="finalizar()" [disabled]="finalizando">
+      <mat-icon>check_circle</mat-icon>
+      {{ finalizando ? 'Finalizando...' : 'Finalizar compra' }}
+    </button>
+    <a matButton="outlined" routerLink="/carrinho">Voltar ao carrinho</a>
+  </aside>
+</section>

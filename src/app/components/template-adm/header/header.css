@@ -1,0 +1,39 @@
+.adm-header {
+  height: 74px;
+  display: flex;
+  justify-content: space-between;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  backdrop-filter: blur(14px);
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-copy small {
+  color: var(--muted);
+}
+
+.adm-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adm-header-actions button {
+  color: var(--text) !important;
+}
+
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(124, 92, 255, 0.14);
+  color: var(--accent);
+}

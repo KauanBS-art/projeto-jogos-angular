@@ -1,0 +1,137 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--store-bg);
+  color: var(--text);
+}
+
+.store-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.store-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: 24px;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--store-topbar);
+  color: var(--text);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.brand mat-icon {
+  color: #63e6be;
+}
+
+.store-nav a,
+.store-actions a,
+.store-actions button {
+  color: var(--text) !important;
+}
+
+.store-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.store-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.store-actions a {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #d7193f;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
+.store-content {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+  flex: 1;
+}
+
+.store-footer {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 22px;
+  padding: 28px max(16px, calc((100% - 1180px) / 2));
+  border-top: 1px solid var(--border);
+  background: var(--store-topbar);
+  color: var(--muted);
+}
+
+.store-footer div {
+  display: grid;
+  gap: 6px;
+}
+
+.store-footer strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.store-footer span,
+.store-footer small {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.store-footer small {
+  grid-column: 1 / -1;
+  padding-top: 4px;
+  border-top: 1px solid rgba(146, 163, 255, 0.12);
+}
+
+@media (max-width: 720px) {
+  .store-topbar {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+
+  .store-nav {
+    order: 3;
+    width: 100%;
+  }
+
+  .store-actions {
+    margin-left: auto;
+  }
+
+  .store-footer {
+    grid-template-columns: 1fr;
+  }
+}

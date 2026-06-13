@@ -1,0 +1,21 @@
+<section class="auth-card">
+  <span class="eyebrow"><mat-icon>lock_reset</mat-icon> Recuperacao</span>
+  <h1>Esqueceu a senha?</h1>
+  <p>Informe seu email para registrar a solicitacao de recuperacao.</p>
+
+  @if (enviado) {
+    <div class="notice">Se o email existir, a solicitacao foi registrada.</div>
+    <a routerLink="/login">Voltar ao login</a>
+  } @else {
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+      <button matButton="filled" type="button" (click)="enviar()">
+        <mat-icon>send</mat-icon>
+        Enviar
+      </button>
+    </form>
+  }
+</section>

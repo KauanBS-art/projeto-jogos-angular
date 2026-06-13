@@ -1,0 +1,67 @@
+@if (loading) {
+  <div class="state-box">Carregando jogo...</div>
+} @else if (jogo) {
+  <a class="back-link" routerLink="/">
+    <mat-icon>arrow_back</mat-icon>
+    Voltar ao catalogo
+  </a>
+
+  <section class="detail-layout">
+    <div class="cover">
+      @if (getImagemUrl(jogo); as imagemUrl) {
+        <img [src]="imagemUrl" [alt]="jogo.titulo" />
+      } @else {
+        <mat-icon>stadia_controller</mat-icon>
+      }
+    </div>
+
+    <div class="detail-copy">
+      <span class="publisher">{{ jogo.nomeEmpresa || 'Desenvolvedora nao informada' }}</span>
+      <h1>{{ jogo.titulo }}</h1>
+      <p>{{ jogo.descricao }}</p>
+
+      <dl class="facts">
+        <div>
+          <dt>Preco</dt>
+          <dd>{{ jogo.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</dd>
+        </div>
+        <div>
+          <dt>Estoque</dt>
+          <dd>{{ jogo.estoque }} unidades</dd>
+        </div>
+        <div>
+          <dt>Lancamento</dt>
+          <dd>{{ jogo.dataLancamento | date:'dd/MM/yyyy' }}</dd>
+        </div>
+      </dl>
+
+      <div class="tag-section">
+        <strong>Categorias</strong>
+        <div class="chips">
+          @for (categoria of jogo.categorias ?? []; track categoria) {
+            <span>{{ categoria }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="tag-section">
+        <strong>Plataformas</strong>
+        <div class="chips">
+          @for (plataforma of jogo.plataformas ?? []; track plataforma) {
+            <span>{{ plataforma }}</span>
+          }
+        </div>
+      </div>
+
+      <button matButton="filled" type="button" (click)="adicionarCarrinho()" [disabled]="jogo.estoque <= 0">
+        <mat-icon>add_shopping_cart</mat-icon>
+        {{ jogo.estoque > 0 ? 'Adicionar ao carrinho' : 'Sem estoque' }}
+      </button>
+
+      <button matButton="outlined" type="button" (click)="alternarDesejo()">
+        <mat-icon>{{ estaNosDesejos() ? 'favorite' : 'favorite_border' }}</mat-icon>
+        {{ estaNosDesejos() ? 'Remover dos desejos' : 'Adicionar a lista de desejos' }}
+      </button>
+    </div>
+  </section>
+}

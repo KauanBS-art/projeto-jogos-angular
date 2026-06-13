@@ -1,0 +1,94 @@
+<div class="store-shell">
+  <mat-toolbar class="store-topbar">
+    <a class="brand" routerLink="/">
+      <mat-icon>sports_esports</mat-icon>
+      <span>GameXtore</span>
+    </a>
+
+    <nav class="store-nav" aria-label="Menu principal">
+      <a mat-button routerLink="/">Jogos</a>
+      <a mat-button routerLink="/promocoes">Promoções</a>
+      <a mat-button routerLink="/lista-desejos">Desejos</a>
+
+    </nav>
+
+    <div class="store-actions">
+      <button
+        mat-button
+        type="button"
+        (click)="toggleTheme()"
+        [attr.aria-label]="isDarkTheme() ? 'Ativar modo claro' : 'Ativar modo escuro'">
+        {{ isDarkTheme() ? 'modo claro' : 'modo escuro' }}
+      </button>
+
+      <a mat-icon-button routerLink="/carrinho" aria-label="Abrir carrinho">
+        <mat-icon>shopping_cart</mat-icon>
+        @if (quantidadeTotal() > 0) {
+          <span class="cart-count">{{ quantidadeTotal() }}</span>
+        }
+      </a>
+
+      <button mat-stroked-button type="button" [matMenuTriggerFor]="menuConta">
+        <mat-icon>account_circle</mat-icon>
+        Conta
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <mat-menu #menuConta="matMenu">
+    @if (currentUser(); as usuario) {
+      <button mat-menu-item type="button" disabled>
+        <mat-icon>person</mat-icon>
+        <span>{{ usuario.nome }}</span>
+      </button>
+      <a mat-menu-item routerLink="/perfil">
+        <mat-icon>manage_accounts</mat-icon>
+        <span>Meu perfil</span>
+      </a>
+      <a mat-menu-item routerLink="/lista-desejos">
+        <mat-icon>favorite</mat-icon>
+        <span>Lista de desejos</span>
+      </a>
+      @if (isAdmin()) {
+        <a mat-menu-item routerLink="/adm/dashboard">
+          <mat-icon>dashboard</mat-icon>
+          <span>Painel administrativo</span>
+        </a>
+      }
+      <button mat-menu-item type="button" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Sair</span>
+      </button>
+    } @else {
+      <a mat-menu-item routerLink="/login" [queryParams]="{ redirectTo: '/carrinho' }">
+        <mat-icon>login</mat-icon>
+        <span>Entrar</span>
+      </a>
+    }
+  </mat-menu>
+
+  <main class="store-content">
+    <router-outlet />
+  </main>
+
+  <footer class="store-footer">
+    <div>
+      <strong>GameXtore</strong>
+      <span>Jogos digitais, ofertas e biblioteca sempre a mao.</span>
+    </div>
+
+    <div>
+      <strong>Contato</strong>
+      <span>suporte@kauangamestore.com</span>
+      <span>Atendimento: segunda a sexta, 8h as 18h</span>
+    </div>
+
+    <div>
+      <strong>Informacoes</strong>
+      <span>Pagamentos seguros</span>
+      <span>Pedidos e lista de desejos na sua conta</span>
+    </div>
+
+    <small>&copy; {{ currentYear }} GameXtore. Todos os direitos reservados.</small>
+  </footer>
+</div>

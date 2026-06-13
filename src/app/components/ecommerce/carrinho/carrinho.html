@@ -1,0 +1,81 @@
+<section class="cart-header">
+  <div>
+    <span class="eyebrow">
+      <mat-icon>shopping_cart</mat-icon>
+      Carrinho
+    </span>
+    <h1>Revise seu pedido</h1>
+  </div>
+
+  <a matButton="outlined" routerLink="/">
+    <mat-icon>arrow_back</mat-icon>
+    Continuar comprando
+  </a>
+</section>
+
+@if (!itens().length) {
+  <div class="empty-cart">
+    <mat-icon>remove_shopping_cart</mat-icon>
+    <h2>Seu carrinho esta vazio</h2>
+    <p>Escolha jogos no catalogo para iniciar uma compra.</p>
+    <a matButton="filled" routerLink="/">Ver jogos</a>
+  </div>
+} @else {
+  <section class="cart-layout">
+    <div class="cart-items">
+      @for (item of itens(); track item.jogo.id) {
+        <article class="cart-item">
+          <div class="thumb">
+            @if (getImagemUrl(item.jogo); as imagemUrl) {
+              <img [src]="imagemUrl" [alt]="item.jogo.titulo" />
+            } @else {
+              <mat-icon>stadia_controller</mat-icon>
+            }
+          </div>
+
+          <div class="item-copy">
+            <strong>{{ item.jogo.titulo }}</strong>
+            <span>{{ item.jogo.nomeEmpresa || 'Desenvolvedora nao informada' }}</span>
+            <small>{{ item.jogo.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</small>
+          </div>
+
+          <label class="quantity">
+            Qtd.
+            <input
+              type="number"
+              min="1"
+              [max]="item.jogo.estoque"
+              [value]="item.quantidade"
+              (change)="alterarQuantidade(item.jogo.id, $event)" />
+          </label>
+
+          <strong class="subtotal">{{ item.jogo.preco * item.quantidade | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+
+          <button mat-icon-button type="button" (click)="remover(item.jogo.id)" aria-label="Remover jogo">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </article>
+      }
+
+      <button matButton="outlined" type="button" (click)="limpar()">
+        <mat-icon>delete_sweep</mat-icon>
+        Limpar carrinho
+      </button>
+    </div>
+
+    <aside class="checkout">
+      <h2>Resumo do carrinho</h2>
+      <div class="totals">
+        <span>Itens</span>
+        <strong>{{ quantidadeTotal() }}</strong>
+        <span>Total</span>
+        <strong>{{ valorTotal() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+      </div>
+
+      <a matButton="filled" routerLink="/finalizar-compra">
+        <mat-icon>payments</mat-icon>
+        Ir para finalizacao
+      </a>
+    </aside>
+  </section>
+}

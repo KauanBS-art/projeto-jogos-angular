@@ -1,0 +1,14 @@
+:host { display: block; color: var(--text); }
+.profile-heading { display: grid; gap: 8px; margin-bottom: 22px; }
+.profile-heading span { display: inline-flex; align-items: center; gap: 8px; color: #63e6be; font-weight: 800; }
+.profile-heading h1 { margin: 0; font-size: 38px; }
+.profile-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr); gap: 18px; align-items: start; }
+.panel { display: grid; gap: 14px; padding: 22px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+h2, h3 { margin: 0; }
+form { display: grid; gap: 12px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-row.compact { grid-template-columns: 110px 1fr 1fr 80px; }
+.history { display: grid; gap: 10px; }
+.history article { display: grid; grid-template-columns: 1fr auto; gap: 6px; padding: 12px; border-radius: 8px; background: var(--surface-alt); }
+.history article span:last-child { grid-column: 1 / -1; color: #63e6be; font-weight: 800; }
+@media (max-width: 980px) { .profile-layout, .form-row, .form-row.compact { grid-template-columns: 1fr; } }

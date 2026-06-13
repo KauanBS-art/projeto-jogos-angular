@@ -1,0 +1,120 @@
+<section class="profile-heading">
+  <span><mat-icon>account_circle</mat-icon> Minha conta</span>
+  <h1>Perfil e compras</h1>
+</section>
+
+<section class="profile-layout">
+  <div class="panel">
+    <h2>Dados completos</h2>
+    <form [formGroup]="perfilForm">
+      <div class="form-row">
+        <mat-form-field appearance="outline"><mat-label>Nome</mat-label><input matInput formControlName="nome" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Email</mat-label><input matInput formControlName="email" /></mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline"><mat-label>Telefone</mat-label><input matInput formControlName="telefone" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>CPF</mat-label><input matInput formControlName="cpf" /></mat-form-field>
+      </div>
+
+      <h3>Endereços</h3>
+      <div class="cards-list">
+        @for (endereco of enderecos; track $index) {
+          <article class="card-item">
+            <div class="card-info">
+              <strong>{{ endereco.logradouro }}, {{ endereco.numero }}</strong>
+              <span>{{ endereco.bairro }} - {{ endereco.cidade }}/{{ endereco.estado }} ({{ endereco.cep }})</span>
+            </div>
+            <button mat-icon-button color="warn" type="button" (click)="removerEnderecoTemporario($index)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </article>
+        } @empty {
+          <p>Nenhum endereço cadastrado.</p>
+        }
+      </div>
+
+      <div [formGroup]="enderecoForm" class="new-card-form">
+        <h4>Adicionar Novo Endereço (Será salvo ao "Salvar perfil")</h4>
+        <div class="form-row">
+          <mat-form-field appearance="outline"><mat-label>CEP</mat-label><input matInput formControlName="cep" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Logradouro</mat-label><input matInput formControlName="logradouro" /></mat-form-field>
+        </div>
+        <div class="form-row compact">
+          <mat-form-field appearance="outline"><mat-label>Numero</mat-label><input matInput formControlName="numero" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Bairro</mat-label><input matInput formControlName="bairro" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Cidade</mat-label><input matInput formControlName="cidade" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>UF</mat-label><input matInput formControlName="estado" /></mat-form-field>
+        </div>
+        <mat-form-field appearance="outline"><mat-label>Complemento</mat-label><input matInput formControlName="complemento" /></mat-form-field>
+        <button matButton="outlined" type="button" (click)="adicionarEnderecoTemporario()" style="margin-bottom: 24px;">
+          <mat-icon>add_location</mat-icon> Adicionar Endereço à Lista
+        </button>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Confirme sua senha para salvar as alterações</mat-label>
+        <input matInput type="password" formControlName="senhaConfirmacao" />
+      </mat-form-field>
+
+      <button matButton="filled" type="button" (click)="salvarPerfil()">
+        <mat-icon>save</mat-icon>
+        Salvar perfil completo
+      </button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Alterar senha</h2>
+    <form [formGroup]="senhaForm">
+      <mat-form-field appearance="outline"><mat-label>Senha atual</mat-label><input matInput type="password" formControlName="senhaAtual" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Nova senha</mat-label><input matInput type="password" formControlName="novaSenha" /></mat-form-field>
+      <button matButton="outlined" type="button" (click)="alterarSenha()">
+        <mat-icon>lock_reset</mat-icon>
+        Alterar senha
+      </button>
+    </form>
+
+    <h2>Métodos de Pagamento</h2>
+    <div class="cards-list">
+      @for (cartao of cartoes; track cartao.id) {
+        <article class="card-item">
+          <div class="card-info">
+            <strong>{{ cartao.numeroMascarado }}</strong>
+            <span>{{ cartao.nomeTitular }} - {{ cartao.validade }}</span>
+          </div>
+          <button mat-icon-button color="warn" (click)="removerCartao(cartao.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </article>
+      } @empty {
+        <p>Nenhum cartão salvo.</p>
+      }
+    </div>
+    <form [formGroup]="cartaoForm" class="new-card-form">
+      <h3>Adicionar Cartão</h3>
+      <div class="form-row compact">
+        <mat-form-field appearance="outline"><mat-label>Número (16 dígitos)</mat-label><input matInput formControlName="numero" maxlength="16" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Validade (MM/YY)</mat-label><input matInput formControlName="validade" maxlength="5" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>CVV</mat-label><input matInput formControlName="cvv" maxlength="4" /></mat-form-field>
+      </div>
+      <mat-form-field appearance="outline"><mat-label>Nome do Titular</mat-label><input matInput formControlName="nomeTitular" /></mat-form-field>
+      <button matButton="outlined" type="button" (click)="adicionarCartao()">
+        <mat-icon>add_card</mat-icon>
+        Adicionar Cartão
+      </button>
+    </form>
+
+    <h2>Historico de compras</h2>
+    <div class="history">
+      @for (pedido of pedidos; track pedido.id) {
+        <article>
+          <strong>Pedido #{{ pedido.id }} ({{ pedido.status }})</strong>
+          <span>{{ pedido.dataPedido | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span>{{ pedido.valorTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+        </article>
+      } @empty {
+        <p>Nenhuma compra realizada ainda.</p>
+      }
+    </div>
+  </div>
+</section>

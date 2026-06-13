@@ -1,0 +1,13 @@
+:host { display: block; }
+
+.login-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.login-links a {
+  color: #d6e4ff;
+  font-weight: 700;
+}

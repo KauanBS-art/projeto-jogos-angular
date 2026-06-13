@@ -1,0 +1,58 @@
+<section class="page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a class="bc-link" routerLink="/adm/dashboard">Home</a>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <a class="bc-link" routerLink="/adm/empresas">Empresas</a>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ form.value.id ? 'Editar Empresa' : 'Nova Empresa' }}</span>
+  </nav>
+
+  <div class="form-hero-row">
+    <div>
+      <h1 class="page-title">Cadastro de Empresa</h1>
+      <p class="page-subtitle">Cadastre os parceiros comerciais do catalogo de jogos.</p>
+    </div>
+    <button class="voltar-btn" type="button" routerLink="/adm/empresas">
+      <mat-icon>arrow_back</mat-icon>
+      Voltar
+    </button>
+  </div>
+
+  <form class="form-layout" [formGroup]="form">
+    <div class="form-section-card">
+      <div class="section-header">
+        <mat-icon class="section-icon">apartment</mat-icon>
+        <h3 class="section-title">Dados da empresa</h3>
+      </div>
+
+      <div class="section-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="nome" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Pais de origem</mat-label>
+          <input matInput formControlName="paisOrigem" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Descricao</mat-label>
+          <textarea matInput rows="4" formControlName="descricao"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button matButton="text" type="button" routerLink="/adm/empresas">Cancelar</button>
+      <button matButton="outlined" type="button" (click)="excluir()" [disabled]="!form.value.id">
+        <mat-icon>delete</mat-icon>
+        Excluir
+      </button>
+      <button matButton="filled" type="button" (click)="salvar()">
+        <mat-icon>save</mat-icon>
+        Salvar
+      </button>
+    </div>
+  </form>
+</section>

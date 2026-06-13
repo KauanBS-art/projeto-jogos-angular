@@ -1,0 +1,140 @@
+<section class="page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a class="bc-link" routerLink="/adm/dashboard">Home</a>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <a class="bc-link" routerLink="/adm/jogos">Jogos</a>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ form.value.id ? 'Editar Jogo' : 'Novo Jogo' }}</span>
+  </nav>
+
+  <div class="form-hero-row">
+    <div>
+      <h1 class="page-title">Cadastro de Jogo</h1>
+      <p class="page-subtitle">Cadastre o produto principal do marketplace com seus relacionamentos.</p>
+    </div>
+    <button class="voltar-btn" type="button" routerLink="/adm/jogos">
+      <mat-icon>arrow_back</mat-icon>
+      Voltar
+    </button>
+  </div>
+
+  <form class="form-layout" [formGroup]="form">
+    <div class="form-section-card">
+      <div class="section-header">
+        <mat-icon class="section-icon">sports_esports</mat-icon>
+        <h3 class="section-title">Dados do jogo</h3>
+      </div>
+
+      <div class="section-grid">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Titulo</mat-label>
+          <input matInput formControlName="titulo" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Descricao</mat-label>
+          <textarea matInput rows="4" formControlName="descricao"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Preco</mat-label>
+          <input matInput type="number" min="0.01" step="0.01" formControlName="preco" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estoque</mat-label>
+          <input matInput type="number" min="1" formControlName="estoque" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data de lancamento</mat-label>
+          <input matInput type="date" formControlName="dataLancamento" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Empresa</mat-label>
+          <mat-select formControlName="idEmpresa">
+            @for (empresa of empresas; track empresa.id) {
+              <mat-option [value]="empresa.id">{{ empresa.nome }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Plataformas</mat-label>
+          <mat-select formControlName="idPlataformas" multiple>
+            @for (plataforma of plataformas; track plataforma.id) {
+              <mat-option [value]="plataforma.id">{{ plataforma.nome }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Categorias</mat-label>
+          <mat-select formControlName="idCategorias" multiple>
+            @for (categoria of categorias; track categoria.id) {
+              <mat-option [value]="categoria.id">{{ categoria.nome }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Desconto (%)</mat-label>
+          <input matInput type="number" formControlName="percentualDesconto" min="0" max="100">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section-card image-section">
+      <div class="section-header">
+        <mat-icon class="section-icon">image</mat-icon>
+        <h3 class="section-title">Capa do jogo</h3>
+      </div>
+
+      <div class="upload-layout">
+        <div class="cover-preview">
+          @if (imagemAtualUrl(); as imagemUrl) {
+            <img [src]="imagemUrl" alt="Previa da capa do jogo" />
+          } @else {
+            <div class="cover-placeholder">
+              <mat-icon>add_photo_alternate</mat-icon>
+              <span>Sem imagem</span>
+            </div>
+          }
+        </div>
+
+        <div class="upload-panel">
+          <input #imagemInput type="file" accept="image/*" hidden (change)="selecionarImagem($event)" />
+          <button matButton="outlined" type="button" (click)="imagemInput.click()">
+            <mat-icon>upload</mat-icon>
+            Selecionar imagem
+          </button>
+          <button matButton="text" type="button" (click)="removerSelecaoImagem(imagemInput)" [disabled]="!arquivoImagem">
+            <mat-icon>close</mat-icon>
+            Limpar selecao
+          </button>
+          <p>
+            @if (arquivoImagem) {
+              Arquivo selecionado: {{ arquivoImagem.name }}
+            } @else if (form.value.id) {
+              Escolha uma nova imagem para substituir a capa atual.
+            } @else {
+              Salve o jogo com uma capa em JPG, PNG, WEBP ou GIF.
+            }
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button matButton="text" type="button" routerLink="/adm/jogos">Cancelar</button>
+      <button matButton="outlined" type="button" (click)="excluir()" [disabled]="!form.value.id">
+        <mat-icon>delete</mat-icon>
+        Excluir
+      </button>
+      <button matButton="filled" type="button" (click)="salvar()">
+        <mat-icon>save</mat-icon>
+        Salvar
+      </button>
+    </div>
+  </form>
+</section>

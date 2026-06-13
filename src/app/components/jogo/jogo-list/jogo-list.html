@@ -1,0 +1,92 @@
+<section class="page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a class="bc-link" routerLink="/adm/dashboard">Home</a>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">Jogos</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Controle de Jogos</h1>
+      <p class="page-subtitle">Gerencie o catalogo principal do marketplace.</p>
+    </div>
+    <button matButton="filled" routerLink="/adm/jogos/new">
+      <mat-icon>add</mat-icon>
+      Novo Jogo
+    </button>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-search">
+      <mat-icon>search</mat-icon>
+      <input (keyup)="aplicarBusca($event)" placeholder="Buscar jogo por titulo..." />
+    </div>
+  </div>
+
+  <section class="game-grid" aria-label="Lista de jogos em cards">
+    @for (item of items; track item.id) {
+      <article class="game-card">
+        <div class="cover">
+          @if (getImagemUrl(item); as imagemUrl) {
+            <img [src]="imagemUrl" [alt]="'Capa do jogo ' + item.titulo" (error)="ocultarImagem($event)" />
+          }
+          <div class="cover-empty">
+            <mat-icon>stadia_controller</mat-icon>
+          </div>
+        </div>
+
+        <div class="game-content">
+          <div class="game-main">
+            <span class="game-studio">{{ item.nomeEmpresa || 'Estudio nao informado' }}</span>
+            <h2>{{ item.titulo }}</h2>
+            <p>{{ item.descricao || 'Sem descricao cadastrada.' }}</p>
+          </div>
+
+          <div class="chip-list">
+            @for (categoria of item.categorias ?? []; track categoria) {
+              <span class="chip">{{ categoria }}</span>
+            }
+          </div>
+
+          <div class="platform-list">
+            @for (plataforma of item.plataformas ?? []; track plataforma) {
+              <span>{{ plataforma }}</span>
+            }
+          </div>
+
+          <div class="game-meta">
+            <div>
+              <span class="meta-label">Preco</span>
+              <strong>{{ (item.preco || 0) | currency:'BRL':'symbol':'1.2-2' }}</strong>
+            </div>
+            <div>
+              <span class="meta-label">Estoque</span>
+              <strong>{{ item.estoque || 0 }}</strong>
+            </div>
+            <div>
+              <span class="meta-label">Lancamento</span>
+              <strong>{{ item.dataLancamento ? (item.dataLancamento | date:'dd/MM/yyyy') : '-' }}</strong>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <a class="action-edit" [routerLink]="['/adm/jogos/edit', item.id]" aria-label="Editar jogo" title="Editar">
+              <mat-icon>edit</mat-icon>
+            </a>
+            <button class="action-delete" type="button" (click)="excluir(item)" aria-label="Excluir jogo">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty-state">
+        <mat-icon>search_off</mat-icon>
+        <strong>Nenhum jogo encontrado</strong>
+        <span>Cadastre um novo produto ou ajuste a busca.</span>
+      </div>
+    }
+  </section>
+
+  <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[4, 8, 16]" (page)="paginar($event)"></mat-paginator>
+</section>

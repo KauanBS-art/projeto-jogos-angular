@@ -1,0 +1,68 @@
+<section class="dashboard-page page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a class="bc-link" routerLink="/adm/dashboard">Home</a>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">Dashboard</span>
+  </nav>
+
+  <header class="page-header">
+    <div>
+      <h1 class="page-title">Painel do Marketplace</h1>
+      <p class="page-subtitle">Visao geral do catalogo, clientes e operacoes da loja.</p>
+    </div>
+  </header>
+
+  <section class="kpi-grid">
+    @for (kpi of kpis; track kpi.title) {
+      <article class="kpi-card">
+        <div class="kpi-top">
+          <mat-icon class="icon">{{ kpi.icon }}</mat-icon>
+          <span class="trend">{{ kpi.trend }}</span>
+        </div>
+        <p class="kpi-title">{{ kpi.title }}</p>
+        <h2>{{ kpi.value }}</h2>
+      </article>
+    }
+  </section>
+
+  <section class="dashboard-grid">
+    <article class="chart-card">
+      <div class="chart-header">
+        <div>
+          <h3>Atalhos rapidos</h3>
+          <p>Entradas mais usadas para administrar o catalogo e as contas da plataforma.</p>
+        </div>
+      </div>
+
+      <div class="shortcut-grid">
+        @for (atalho of atalhos; track atalho.rota) {
+          <a class="shortcut-card" [routerLink]="atalho.rota">
+            <mat-icon>{{ atalho.icone }}</mat-icon>
+            <strong>{{ atalho.titulo }}</strong>
+            <span>{{ atalho.descricao }}</span>
+          </a>
+        }
+      </div>
+    </article>
+
+    <article class="plans-card">
+      <h3>Resumo extra</h3>
+      <div class="plans-list">
+        @for (item of resumoSecundario; track item.label) {
+          <div class="plan-row">
+            <div class="plan-main">
+              <span class="tag">{{ item.label.substring(0, 3).toUpperCase() }}</span>
+              <div>
+                <strong>{{ item.label }}</strong>
+                <small>itens cadastrados</small>
+              </div>
+            </div>
+            <div class="plan-share">
+              <span>{{ item.value }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+</section>

@@ -1,0 +1,41 @@
+<section class="summary-page">
+  @if (pedido) {
+    <span class="eyebrow"><mat-icon>check_circle</mat-icon> Compra finalizada</span>
+    <h1>Pedido #{{ pedido.id }}</h1>
+    <p>{{ pedido.dataPedido | date:'dd/MM/yyyy HH:mm' }} - {{ pedido.modoPagamento }}</p>
+    <p class="email-alert">Aguarde a confirmação por e-mail.</p>
+
+    <div class="panel">
+      <h2>Resumo da compra</h2>
+      @for (item of pedido.itens; track item.tituloJogo) {
+        <div class="line" style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+          @if (item.nomeImagem) {
+            <img [src]="getImagemUrl(item.nomeImagem)" [alt]="item.tituloJogo" style="width: 64px; height: 64px; object-fit: cover; border-radius: 8px;" />
+          } @else {
+            <div style="width: 64px; height: 64px; background: #333; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><mat-icon>stadia_controller</mat-icon></div>
+          }
+          <div style="flex: 1; display: flex; flex-direction: column;">
+            <span style="font-weight: bold; font-size: 1.1rem;">{{ item.tituloJogo }}</span>
+            <span style="color: #aaa;">Quantidade: {{ item.quantidade }}</span>
+          </div>
+          <strong style="font-size: 1.2rem;">{{ item.precoUnitario * item.quantidade | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+        </div>
+      }
+      <div class="totals">
+        <span>Subtotal</span><strong>{{ pedido.valorOriginal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+        <span>Desconto</span><strong>- {{ pedido.valorDesconto | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+        <span>Total pago</span><strong>{{ pedido.valorTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+      </div>
+    </div>
+
+    <a matButton="filled" routerLink="/">
+      <mat-icon>home</mat-icon>
+      Voltar para a loja
+    </a>
+  } @else {
+    <div class="panel">
+      <h1>Nenhum pedido recente</h1>
+      <a matButton="filled" routerLink="/">Ver jogos</a>
+    </div>
+  }
+</section>

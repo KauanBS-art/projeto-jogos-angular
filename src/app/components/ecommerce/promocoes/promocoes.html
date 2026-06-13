@@ -1,0 +1,107 @@
+<h1 style="margin-top: 30px; font-size: 32px; display: flex; align-items: center; gap: 8px;"><mat-icon style="font-size: 36px; height: 36px; width: 36px; color: #ff4563;">local_fire_department</mat-icon> Ofertas Imperdíveis</h1>
+
+<section class="toolbar">
+  <label class="search-box">
+    <mat-icon>search</mat-icon>
+    <input
+      type="search"
+      placeholder="Buscar por titulo"
+      [(ngModel)]="termoBusca"
+      (keyup.enter)="carregarJogos()" />
+  </label>
+
+  <button matButton="filled" type="button" (click)="carregarJogos()">
+    <mat-icon>search</mat-icon>
+    Buscar
+  </button>
+</section>
+
+<section class="filters" aria-label="Filtros do catalogo">
+  <label>
+    Categoria
+    <select [(ngModel)]="categoriaSelecionada" (change)="aplicarFiltros()">
+      <option value="">Todas</option>
+      @for (categoria of categorias; track categoria) {
+        <option [value]="categoria">{{ categoria }}</option>
+      }
+    </select>
+  </label>
+
+  <label>
+    Plataforma
+    <select [(ngModel)]="plataformaSelecionada" (change)="aplicarFiltros()">
+      <option value="">Todas</option>
+      @for (plataforma of plataformas; track plataforma) {
+        <option [value]="plataforma">{{ plataforma }}</option>
+      }
+    </select>
+  </label>
+
+  <label>
+    Preço Min
+    <input type="number" min="0" step="0.01" [(ngModel)]="precoMin" (input)="aplicarFiltros()" placeholder="R$ 0,00" />
+  </label>
+
+  <label>
+    Preço Max
+    <input type="number" min="0" step="0.01" [(ngModel)]="precoMax" (input)="aplicarFiltros()" placeholder="Ilimitado" />
+  </label>
+</section>
+
+@if (loading) {
+  <div class="state-box">Carregando ofertas...</div>
+} @else if (!jogos.length) {
+  <div class="state-box">Nenhuma oferta encontrada.</div>
+} @else {
+  <section class="game-grid" aria-label="Catalogo de jogos em promoção">
+    @for (jogo of jogos; track jogo.id) {
+      <article class="game-card">
+        <button class="wish-btn" type="button" (click)="alternarDesejo(jogo)" [attr.aria-label]="'Adicionar ' + jogo.titulo + ' a lista de desejos'">
+          <mat-icon>{{ estaNosDesejos(jogo) ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
+
+        @if (jogo.percentualDesconto && jogo.percentualDesconto > 0) {
+            <div class="discount-badge">-{{ jogo.percentualDesconto }}%</div>
+        }
+
+        <button class="cover" type="button" (click)="verDetalhe(jogo)" [attr.aria-label]="'Ver detalhes de ' + jogo.titulo">
+          @if (getImagemUrl(jogo); as imagemUrl) {
+            <img [src]="imagemUrl" [alt]="jogo.titulo" />
+          } @else {
+            <mat-icon>stadia_controller</mat-icon>
+          }
+        </button>
+
+        <div class="game-info">
+          <span class="publisher">{{ jogo.nomeEmpresa || 'Desenvolvedora nao informada' }}</span>
+          <h2>{{ jogo.titulo }}</h2>
+          <p>{{ jogo.descricao }}</p>
+
+          <div class="chips">
+            @for (categoria of jogo.categorias ?? []; track categoria) {
+              <span>{{ categoria }}</span>
+            }
+            @for (plataforma of jogo.plataformas ?? []; track plataforma) {
+              <span>{{ plataforma }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="game-actions">
+          <div class="price-container">
+            @if (jogo.percentualDesconto && jogo.percentualDesconto > 0) {
+              <del>{{ jogo.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</del>
+              <strong style="color: #63e6be;">{{ jogo.precoComDesconto | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+            } @else {
+              <strong>{{ jogo.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+            }
+          </div>
+          <button matButton="filled" type="button" (click)="adicionarCarrinho(jogo)" [disabled]="jogo.estoque <= 0">
+            <mat-icon>add_shopping_cart</mat-icon>
+            {{ jogo.estoque > 0 ? 'Comprar' : 'Sem estoque' }}
+          </button>
+        </div>
+      </article>
+    }
+  </section>
+}
